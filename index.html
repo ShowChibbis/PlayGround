@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#07111d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23071927'/%3E%3Cpath d='M18 45 45 18M25 18h20v20' fill='none' stroke='%2351efff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Neon Run — Subway Dash</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{color-scheme:dark;--cyan:#51efff;--yellow:#ffe46b;--ink:#07111d}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:'DM Sans',sans-serif;touch-action:none}canvas{display:block;width:100%;height:100%;outline:none}
+#game{position:fixed;inset:0}.shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(4,11,20,.36),transparent 25%,transparent 65%,rgba(4,9,16,.55))}
+.hud{position:absolute;inset:0;pointer-events:none;color:#fff}.topbar{position:absolute;top:max(20px,env(safe-area-inset-top));left:26px;right:26px;display:flex;align-items:flex-start;justify-content:space-between}.brand{display:flex;gap:11px;align-items:center;text-shadow:0 2px 18px #001}.brand-mark{width:37px;height:37px;border:1px solid #61eeff8a;border-radius:12px;display:grid;place-items:center;background:#08263a9c;box-shadow:0 0 23px #00d9ff27;color:var(--cyan);font-size:21px}.brand-name{font:800 19px 'Barlow Condensed',sans-serif;letter-spacing:2px}.brand-sub{font-size:8px;letter-spacing:2.5px;color:#a8c9d5;margin-top:1px}.stats{display:flex;gap:10px}.stat{min-width:92px;padding:8px 13px 7px;border:1px solid #ffffff20;background:#071a28a8;backdrop-filter:blur(12px);border-radius:11px;text-align:right}.stat-label{font-size:8px;text-transform:uppercase;letter-spacing:1.9px;color:#91acb8}.stat-value{font:700 19px 'Barlow Condensed',sans-serif;letter-spacing:1px}.stat-value.gold{color:var(--yellow)}.progress-wrap{position:absolute;top:82px;left:50%;transform:translateX(-50%);width:min(290px,38vw);text-align:center}.progress-copy{display:flex;justify-content:space-between;font-size:8px;text-transform:uppercase;letter-spacing:1.7px;color:#b8d5df}.progress-track{height:3px;margin-top:7px;background:#d9f7ff35;border-radius:8px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#25cfff,#d7fcff);box-shadow:0 0 12px #42eaff;transition:width .2s}
+.center-screen{position:absolute;inset:0;display:grid;place-items:center;pointer-events:auto;background:radial-gradient(ellipse at 50% 52%,rgba(3,14,24,.10),rgba(2,8,15,.58) 75%)}.panel{width:min(500px,calc(100vw - 34px));text-align:center;padding:36px 36px 31px;border:1px solid #a3f6ff2b;border-radius:22px;background:linear-gradient(145deg,rgba(7,28,43,.9),rgba(6,16,27,.88));box-shadow:0 25px 100px #0009,inset 0 1px #ffffff12;backdrop-filter:blur(16px);animation:rise .55s cubic-bezier(.2,.8,.2,1) both}.eyebrow{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);font-weight:700}.title{font:900 clamp(48px,9vw,76px)/.84 'Barlow Condensed',sans-serif;letter-spacing:1px;margin:12px 0 15px;text-transform:uppercase;text-shadow:0 0 32px #00cfff38}.title span{color:var(--yellow)}.desc{max-width:350px;margin:0 auto 24px;color:#afc6d1;font-size:12px;line-height:1.7}.primary{pointer-events:auto;border:0;border-radius:10px;padding:13px 30px;background:linear-gradient(100deg,#43deee,#a1f7f5);color:#08202b;font:800 12px 'DM Sans';letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 7px 25px #23d8ef3b;transition:transform .15s,filter .15s}.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}.tips{display:flex;justify-content:center;gap:17px;margin-top:23px;color:#91aab6;font-size:9px;letter-spacing:.5px}.keycap{display:inline-grid;place-items:center;min-width:20px;height:19px;padding:0 4px;margin-right:3px;border:1px solid #ffffff30;border-radius:5px;color:#e8f8ff;background:#ffffff0b;font-size:9px}.result{font:800 38px 'Barlow Condensed';margin:12px}.result em{font-style:normal;color:var(--yellow)}.hidden{display:none!important}.hint{position:absolute;bottom:max(25px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);padding:8px 13px;border:1px solid #ffffff16;border-radius:20px;background:#0615218c;color:#b4cad2;font-size:9px;letter-spacing:1.5px;white-space:nowrap;transition:opacity .5s}.hint b{color:#fff}.toast{position:absolute;top:27%;left:50%;transform:translate(-50%,-10px);font:800 13px 'Barlow Condensed';letter-spacing:3px;color:var(--yellow);text-shadow:0 0 18px #ffcf38;opacity:0;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}.touch-controls{position:absolute;left:0;right:0;bottom:0;height:40%;pointer-events:none;display:none}.mobile-actions{position:absolute;right:20px;bottom:max(24px,env(safe-area-inset-bottom));display:flex;gap:8px;pointer-events:auto}.action{width:46px;height:46px;border:1px solid #ffffff35;border-radius:50%;background:#071a28a6;color:#e8faff;font-size:18px;backdrop-filter:blur(8px)}
+@keyframes rise{from{opacity:0;transform:translateY(15px) scale(.98)}to{opacity:1;transform:none}}@media(max-width:600px){.topbar{left:15px;right:15px;top:max(14px,env(safe-area-inset-top))}.brand-mark{width:32px;height:32px}.brand-name{font-size:16px}.stat{min-width:67px;padding:7px 9px}.stat-value{font-size:17px}.stats{gap:6px}.progress-wrap{top:68px;width:210px}.panel{padding:30px 21px 24px}.tips{gap:9px;flex-wrap:wrap}.hint{font-size:8px;bottom:max(82px,env(safe-area-inset-bottom))}.mobile-actions{display:flex}}
+</style>
+</head>
+<body>
+<div id="game"></div><div class="shade"></div>
+<div class="hud">
+  <div class="topbar"><div class="brand"><div class="brand-mark">↗</div><div><div class="brand-name">NEON RUN</div><div class="brand-sub">SUBWAY DASH</div></div></div>
+    <div class="stats"><div class="stat"><div class="stat-label">Distance</div><div class="stat-value" id="distance">0000 <small style="font:500 9px 'DM Sans';color:#9db6c0">m</small></div></div><div class="stat"><div class="stat-label">Coins</div><div class="stat-value gold" id="coins">◉ 0</div></div></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-copy"><span>Rush hour</span><span id="speedLabel">SPEED 1.0×</span></div><div class="progress-track"><div class="progress-fill" id="progress"></div></div></div>
+  <div class="toast" id="toast">NICE!</div>
+  <div class="hint" id="hint"><b>← →</b> SWITCH LANE &nbsp;·&nbsp; <b>↑</b> JUMP &nbsp;·&nbsp; <b>↓</b> SLIDE</div>
+  <div class="mobile-actions"><button class="action" data-act="jump">↑</button><button class="action" data-act="slide">↓</button></div>
+  <div class="center-screen" id="intro"><div class="panel"><div class="eyebrow">A midnight metro adventure</div><div class="title">NEON<br><span>RUNNER</span></div><p class="desc">The last train is leaving. Weave through the rush, grab every coin, and see how far you can run.</p><button class="primary" id="play">Start running&nbsp; →</button><div class="tips"><span><i class="keycap">←</i><i class="keycap">→</i> Change lanes</span><span><i class="keycap">↑</i> Jump</span><span><i class="keycap">↓</i> Slide</span></div></div></div>
+  <div class="center-screen hidden" id="gameover"><div class="panel"><div class="eyebrow">End of the line</div><div class="title" style="font-size:56px">NICE <span>RUN!</span></div><div class="result" id="finalScore">0 <em>m</em></div><p class="desc" id="finalCopy">You made it through the rush.</p><button class="primary" id="again">Run it back&nbsp; ↻</button><div class="tips"><span>Best run&nbsp; <b id="bestRun" style="color:#ffe46b">0 m</b></span></div></div></div>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const host=document.querySelector('#game');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x081521);scene.fog=new THREE.Fog(0x081521,25,105);
+const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,.1,180);camera.position.set(0,5.1,10.8);camera.lookAt(0,1,-4);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;host.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x8ddfff,0x15151d,2.1));const key=new THREE.DirectionalLight(0xffe6bd,3.2);key.position.set(-5,12,7);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-12;key.shadow.camera.right=12;key.shadow.camera.top=20;key.shadow.camera.bottom=-12;scene.add(key);
+const cyanLight=new THREE.PointLight(0x15cfff,25,32,2);cyanLight.position.set(0,4,-8);scene.add(cyanLight);const warmLight=new THREE.PointLight(0xff9f4b,18,24,2);warmLight.position.set(3,3,-23);scene.add(warmLight);
+const mat=(color,rough=.75,metal=0)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
+const mats={floor:mat(0x252a32),edge:mat(0x43434a),rail:mat(0x9ca8ac,.34,.8),dark:mat(0x111921),yellow:mat(0xffd955,.38),cyan:mat(0x21d8ed,.3,.2),red:mat(0xee4761,.48),concrete:mat(0x555761),blue:mat(0x237eb0,.5),white:mat(0xe4f0e9,.48),window:mat(0x68ddff,.25,.25),orange:mat(0xff8a45,.45)};
+function box(parent,w,h,d,material,x,y,z,cast=true,receive=true){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=receive;parent.add(m);return m}
+function cylinder(parent,r1,r2,h,material,x,y,z,seg=12){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,seg),material);m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m}
+// Tracks, sleepers and platform form the endless subway corridor.
+const world=new THREE.Group();scene.add(world);box(world,8,.35,150,mats.floor,0,-.25,-55,false,true);
+for(let lane=-1;lane<=1;lane++){
+ const x=lane*2.35;box(world,2.18,.12,150,mats.edge,x,-.02,-55,false,true);
+ for(const dx of [-.65,.65]){box(world,.13,.12,150,mats.rail,x+dx,.09,-55,mats.rail,false,true);}
+}
+for(let z=8;z>-125;z-=2){box(world,7.3,.12,.19,mat(0x6a5650),0,-.02,z,false,true)}
+// Platform edges, pillars, marquee signs and repeated pools of station light.
+for(let side of [-1,1]){
+ box(world,2.5,.4,150,mat(0x454954),side*5.25,.04,-55,false,true);
+ box(world,.09,.08,150,mats.yellow,side*4.05,.28,-55,false,true);
+ for(let z=5;z>-115;z-=17){box(world,.55,6,.65,mat(0x444955),side*6.2,2.8,z,false,true);box(world,.6,.18,.72,mats.cyan,side*6.2,5.5,z,false,false);}
+}
+// Tunnel wall panels with lit route boards: authored geometry, no image assets.
+for(let side of [-1,1]){
+ box(world,.35,7,150,mat(0x172b3a),side*7.9,3.25,-55,false,true);
+ for(let z=4;z>-118;z-=18){
+   box(world,.16,2.15,5,mat(0x254557),side*7.67,3.25,z,false,true);
+   box(world,.08,1.45,3.8,mat(0x12202c),side*7.56,3.35,z,false,false);
+   box(world,.11,.08,3.3,side===-1?mats.cyan:mats.orange,side*7.49,4.02,z,false,false);
+   box(world,.05,.22,.52,mats.white,side*7.48,3.62,z-1.0,false,false);
+ }
+}
+for(let z=4;z>-120;z-=12){
+ box(world,15,.22,.65,mat(0x263944),0,7,z,false,false);
+ box(world,3.4,.09,.32,mats.cyan,0,6.83,z,false,false);
+ const glow=new THREE.PointLight(0x46d8ff,11,15,2);glow.position.set(0,6.2,z);scene.add(glow);
+}
+// Character assembly: colorful street-runner with animated legs and arms.
+const runner=new THREE.Group();scene.add(runner);runner.position.set(0,0,2.3);
+const body=new THREE.Group();runner.add(body);
+const skin=mat(0x9b6247),jacket=mat(0xff674f,.48),pants=mat(0x182b48),shoe=mat(0xeff4e8,.45),hood=mat(0x13c5d6,.38);
+const torso= new THREE.Mesh(new THREE.BoxGeometry(.64,.77,.38),jacket);torso.position.y=1.04;torso.castShadow=true;body.add(torso);
+const head=new THREE.Mesh(new THREE.SphereGeometry(.25,16,12),skin);head.position.set(0,1.66,0);head.castShadow=true;body.add(head);
+const hair=new THREE.Mesh(new THREE.SphereGeometry(.26,12,8,0,Math.PI*2,0,Math.PI*.52),hood);hair.position.set(0,1.74,0);hair.castShadow=true;body.add(hair);
+box(body,.48,.12,.43,hood,0,.67,0); // waist detail
+const legs=[],arms=[];
+for(let side of [-1,1]){
+ const leg=new THREE.Group();leg.position.set(side*.19,.68,0);body.add(leg);box(leg,.23,.55,.25,pants,0,-.23,0);box(leg,.28,.13,.4,shoe,0,-.51,-.08);legs.push(leg);
+ const arm=new THREE.Group();arm.position.set(side*.38,1.32,0);body.add(arm);box(arm,.19,.52,.2,jacket,0,-.22,0);const hand=new THREE.Mesh(new THREE.SphereGeometry(.1,10,8),skin);hand.position.set(0,-.49,0);arm.add(hand);arms.push(arm);
+}
+// Runner backpack and reflective stripe.
+box(body,.44,.47,.2,mat(0x15a9bd),0,1.12,.28);box(body,.67,.08,.405,mats.yellow,0,1.12,-.205,false,false);
+
+const lanes=[-2.35,0,2.35];let lane=1,runState='ready',speed=13,distance=0,coinCount=0,elapsed=0,jumpTime=0,slideTime=0,spawnTimer=1.5,coinTimer=1.05,shake=0;
+let obstacles=[],coins=[],decor=[],worldOffset=0;let best=Number(localStorage.getItem('neonRunBest')||0);
+const ui={distance:document.querySelector('#distance'),coins:document.querySelector('#coins'),progress:document.querySelector('#progress'),speed:document.querySelector('#speedLabel'),intro:document.querySelector('#intro'),over:document.querySelector('#gameover'),hint:document.querySelector('#hint'),final:document.querySelector('#finalScore'),copy:document.querySelector('#finalCopy'),best:document.querySelector('#bestRun'),toast:document.querySelector('#toast')};
+function coinMesh(){const g=new THREE.Group();const c=new THREE.Mesh(new THREE.TorusGeometry(.24,.075,10,20),mats.yellow);c.rotation.y=Math.PI/2;g.add(c);const core=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.045,12),mat(0xfff0a3,.25,.3));core.rotation.x=Math.PI/2;g.add(core);const glow=new THREE.PointLight(0xffc72b,1.4,2.7);g.add(glow);return g}
+function makeObstacle(type,laneIndex,z){
+ const g=new THREE.Group();g.position.set(lanes[laneIndex],0,z);g.userData={type,lane:laneIndex};
+ if(type==='barrier'){
+   box(g,1.45,.65,.42,mats.red,0,.46,0);box(g,1.55,.14,.5,mats.white,0,.57,-.03);box(g,.17,.27,.54,mats.yellow,-.48,.43,-.29);box(g,.17,.27,.54,mats.yellow,.48,.43,-.29);
+   for(let x of [-.56,.56])box(g,.15,.65,.15,mats.dark,x,.33,.13);
+ }else if(type==='train'){
+   box(g,1.86,2.35,2.7,mats.blue,0,1.19,0);box(g,1.55,.78,.08,mat(0x142536),0,1.45,-1.37);box(g,1.15,.42,.1,mats.window,0,1.52,-1.43);box(g,.65,.13,.1,mats.yellow,0,.77,-1.43);
+   for(let x of [-.62,.62]){const light=new THREE.PointLight(0x3fe7ff,3,4);light.position.set(x,.85,-1.2);g.add(light)}
+ }else{
+   // overhead slide gate, clear space under the bright crossbar
+   box(g,1.85,.25,.33,mats.orange,0,1.85,0);box(g,.16,1.95,.3,mats.dark,-.86,.94,0);box(g,.16,1.95,.3,mats.dark,.86,.94,0);box(g,1.87,.08,.36,mats.yellow,0,1.68,-.02);
+ }
+ scene.add(g);obstacles.push(g);
+}
+function addCoins(laneIndex,z,count=5,step=2.15,arc=false){for(let i=0;i<count;i++){const c=coinMesh();c.position.set(lanes[laneIndex],arc?1.55+Math.sin(i/(count-1)*Math.PI)*1.25:1.05,z-i*step);c.userData={lane:laneIndex,taken:false};scene.add(c);coins.push(c)}}
+function flashToast(text){ui.toast.textContent=text;ui.toast.classList.add('show');setTimeout(()=>ui.toast.classList.remove('show'),700)}
+function clearEntities(){for(const o of obstacles)scene.remove(o);for(const c of coins)scene.remove(c);obstacles=[];coins=[]}
+function startGame(){clearEntities();lane=1;runner.position.x=0;runner.position.y=0;speed=13;distance=0;coinCount=0;elapsed=0;jumpTime=0;slideTime=0;spawnTimer=.8;coinTimer=.55;shake=0;runState='playing';ui.intro.classList.add('hidden');ui.over.classList.add('hidden');ui.hint.style.opacity='1';flashToast('ALL ABOARD!')}
+function endGame(){runState='over';shake=.32;const meters=Math.floor(distance);if(meters>best){best=meters;localStorage.setItem('neonRunBest',best)}ui.final.innerHTML=`${meters} <em>m</em>`;ui.copy.textContent=`You collected ${coinCount} coin${coinCount===1?'':'s'} on your dash through the night.`;ui.best.textContent=`${best} m`;ui.over.classList.remove('hidden')}
+function act(key){if(runState!=='playing')return;if(key==='left')lane=Math.max(0,lane-1);if(key==='right')lane=Math.min(2,lane+1);if(key==='jump'&&jumpTime<=0&&slideTime<=0)jumpTime=.78;if(key==='slide'&&jumpTime<=0)slideTime=.68}
+window.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','a','d','w','s'].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')act('left');if(e.key==='ArrowRight'||e.key==='d'||e.key==='D')act('right');if(e.key==='ArrowUp'||e.key==='w'||e.key==='W'||e.key===' ')act('jump');if(e.key==='ArrowDown'||e.key==='s'||e.key==='S')act('slide');if((e.key==='Enter'||e.key===' ')&&runState!=='playing')startGame()});
+document.querySelector('#play').onclick=startGame;document.querySelector('#again').onclick=startGame;
+for(const b of document.querySelectorAll('.action'))b.addEventListener('pointerdown',e=>{e.preventDefault();act(b.dataset.act)});
+let touchStart=null;renderer.domElement.addEventListener('pointerdown',e=>{touchStart={x:e.clientX,y:e.clientY}});renderer.domElement.addEventListener('pointerup',e=>{if(!touchStart)return;const dx=e.clientX-touchStart.x,dy=e.clientY-touchStart.y;if(Math.max(Math.abs(dx),Math.abs(dy))>25){if(Math.abs(dx)>Math.abs(dy))act(dx<0?'left':'right');else act(dy<0?'jump':'slide')}touchStart=null});
+
+// Duplicate the complete station set so the track can loop without a visible seam.
+const secondWorld=world.clone(true);secondWorld.position.z=-138;scene.add(secondWorld);
+function spawnWave(){
+ const laneA=Math.floor(Math.random()*3),roll=Math.random();
+ if(roll<.34){makeObstacle('barrier',laneA,-72);addCoins(laneA===1?0:1,-56,5,2.1,false)}
+ else if(roll<.64){makeObstacle('gate',laneA,-72);const safe=(laneA+1+Math.floor(Math.random()*2))%3;addCoins(safe,-58,5,2.1,false)}
+ else if(roll<.84){makeObstacle('train',laneA,-72);const safe=(laneA+1)%3;addCoins(safe,-57,6,2.2,false)}
+ else{addCoins(laneA,-72,8,2.1,true)}
+}
+function updateGame(dt){
+ if(runState!=='playing')return;
+ elapsed+=dt;distance+=speed*dt*.72;speed=Math.min(22,13+Math.floor(distance/180)*.75);
+ spawnTimer-=dt;coinTimer-=dt;if(spawnTimer<=0){spawnWave();spawnTimer=Math.max(1.7,3.15-(speed-13)*.075)+Math.random()*.55}if(coinTimer<=0){if(Math.random()<.54){const l=Math.floor(Math.random()*3);addCoins(l,-67,5,2.35,false)}coinTimer=2.35+Math.random()*1.25}
+ world.position.z+=speed*dt;secondWorld.position.z+=speed*dt;if(world.position.z>=138)world.position.z-=276;if(secondWorld.position.z>=138)secondWorld.position.z-=276;
+ for(const o of obstacles)o.position.z+=speed*dt;for(const c of coins){c.position.z+=speed*dt;c.rotation.z+=dt*2.7;c.rotation.y+=dt*.7;}
+ obstacles=obstacles.filter(o=>{if(o.position.z>12){scene.remove(o);return false}return true});coins=coins.filter(c=>{if(c.userData.taken)return false;if(c.position.z>12){scene.remove(c);return false}return true});
+ jumpTime=Math.max(0,jumpTime-dt);slideTime=Math.max(0,slideTime-dt);
+ const jumpProgress=jumpTime>0?1-jumpTime/.78:0;runner.position.y=jumpTime>0?Math.sin(jumpProgress*Math.PI)*1.6:0;
+ runner.position.x+=(lanes[lane]-runner.position.x)*Math.min(1,dt*13);
+ const running=elapsed*speed*.55;body.position.y=slideTime>0?-.3:Math.abs(Math.sin(running*1.65))*.065;body.rotation.x=slideTime>0?-.55:Math.sin(running*1.65)*.035;
+ for(let i=0;i<2;i++){const swing=Math.sin(running*1.65+i*Math.PI)*.72;legs[i].rotation.x=slideTime>0?-.5:swing;arms[i].rotation.x=slideTime>0?.6:-swing*.75;}
+ body.scale.y=slideTime>0?.72:1;
+ for(const o of obstacles){if(Math.abs(o.position.z-runner.position.z)<1.02&&Math.abs(o.position.x-runner.position.x)<1.05){const safe=o.userData.type==='barrier'&&runner.position.y>.78||o.userData.type==='gate'&&slideTime>0;if(!safe){endGame();break}}}
+ for(const c of coins){if(!c.userData.taken&&Math.abs(c.position.z-runner.position.z)<1.05&&Math.abs(c.position.x-runner.position.x)<1.05&&Math.abs(c.position.y-(runner.position.y+1.05))<1.6){c.userData.taken=true;scene.remove(c);coinCount++;flashToast('+1 COIN')}}
+ ui.distance.innerHTML=`${String(Math.floor(distance)).padStart(4,'0')} <small style="font:500 9px 'DM Sans';color:#9db6c0">m</small>`;ui.coins.textContent=`◉ ${coinCount}`;ui.progress.style.width=`${Math.floor(distance%240/240*100)}%`;ui.speed.textContent=`SPEED ${(speed/13).toFixed(1)}×`;
+ if(elapsed>4)ui.hint.style.opacity='0';
+}
+let last=performance.now();function frame(now){const dt=Math.min(.04,(now-last)/1000);last=now;updateGame(dt);if(shake>0){shake=Math.max(0,shake-dt);camera.position.x=(Math.random()-.5)*shake*1.5} else camera.position.x+=(0-camera.position.x)*.1;camera.lookAt(0,1.05,-4);renderer.render(scene,camera);requestAnimationFrame(frame)}requestAnimationFrame(frame);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.8))});
+</script>
+</body>
+</html>
